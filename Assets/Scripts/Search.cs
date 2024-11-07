@@ -5,7 +5,8 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public class Search : MonoBehaviour {
-	private string[] _searchKeywords = {
+	private readonly string[] _searchKeywords = {
+		"---------------------------------------",
 		"Roofing",
 		"Soffit/Fascia",
 		"Gutters",

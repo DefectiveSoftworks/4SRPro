@@ -629,6 +629,18 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1232138049}
     m_Modifications:
+    - target: {fileID: 3299135925747317072, guid: a8fd4ac3c1f1d5f4dbac922cd8181ae5, type: 3}
+      propertyPath: m_Options.m_Options.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3299135925747317072, guid: a8fd4ac3c1f1d5f4dbac922cd8181ae5, type: 3}
+      propertyPath: m_Options.m_Options.Array.data[0].m_Text
+      value: What Service Are You Seeking?
+      objectReference: {fileID: 0}
+    - target: {fileID: 3299135925747317072, guid: a8fd4ac3c1f1d5f4dbac922cd8181ae5, type: 3}
+      propertyPath: m_Options.m_Options.Array.data[1].m_Text
+      value: Option C
+      objectReference: {fileID: 0}
     - target: {fileID: 3299135925747317086, guid: a8fd4ac3c1f1d5f4dbac922cd8181ae5, type: 3}
       propertyPath: m_Name
       value: SearchDropdown
@@ -716,6 +728,14 @@ PrefabInstance:
     - target: {fileID: 3299135925747317087, guid: a8fd4ac3c1f1d5f4dbac922cd8181ae5, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3299135927209468647, guid: a8fd4ac3c1f1d5f4dbac922cd8181ae5, type: 3}
+      propertyPath: m_text
+      value: What Service Are You Seeking?
+      objectReference: {fileID: 0}
+    - target: {fileID: 3299135927490144716, guid: a8fd4ac3c1f1d5f4dbac922cd8181ae5, type: 3}
+      propertyPath: m_text
+      value: What Service Are You Seeking?
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a8fd4ac3c1f1d5f4dbac922cd8181ae5, type: 3}

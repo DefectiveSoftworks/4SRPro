@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -25,7 +27,17 @@ public class Search : MonoBehaviour {
 	[SerializeField]
 	private TMP_Dropdown searchDropdown;
 
+	private List<TMP_Dropdown.OptionData> GetSearchKeywords() {
+		return _searchKeywords.Select(searchKeyword => new TMP_Dropdown.OptionData(searchKeyword)).ToList();
+	}
+
 	private void Start() {
+		List<TMP_Dropdown.OptionData> searchOptionData = GetSearchKeywords();
+		TMP_Dropdown searchDropdownComp = searchDropdown.GetComponent<TMP_Dropdown>();
+		searchDropdownComp.options.Clear();
+		searchDropdownComp.options.AddRange(searchOptionData);
+		searchDropdownComp.value = -1;
+
 		Button searchButtonComp = searchButton.GetComponent<Button>();
 		searchButtonComp.onClick.AddListener(Greet);
 	}

@@ -20,9 +20,6 @@ public class Search : MonoBehaviour {
 	};
 
 	[SerializeField]
-	private string greetingMessage = "Hello, world!";
-
-	[SerializeField]
 	private Button searchButton;
 
 	[SerializeField]
@@ -38,12 +35,5 @@ public class Search : MonoBehaviour {
 		searchDropdownComp.options.Clear();
 		searchDropdownComp.options.AddRange(searchOptionData);
 		searchDropdownComp.value = -1;
-
-		Button searchButtonComp = searchButton.GetComponent<Button>();
-		searchButtonComp.onClick.AddListener(Greet);
-	}
-
-	private void Greet() {
-		Debug.Log(greetingMessage);
 	}
 }

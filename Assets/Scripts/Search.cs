@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,7 +8,12 @@ using UnityEngine.Networking;
 using UnityEngine.UI;
 
 public class Search : MonoBehaviour {
-	private const string ServicesEndpoint = "http://whiskeybox.local/foo";
+	[Serializable]
+	private class Foo {
+		public string[] services;
+	}
+	
+	private const string ServicesEndpoint = "http://whiskeybox.local/services";
 
 	private readonly string[] _searchKeywords = {
 		"---------------------------------------",
@@ -31,7 +37,12 @@ public class Search : MonoBehaviour {
 		} else {
 			string responseText = http.downloadHandler.text;
 			Debug.Log("WhiskeyCMS Service has responded successfully with: " + responseText);
-			responseMessage.text = responseText;
+			Foo responseJson = JsonUtility.FromJson<Foo>(responseText);
+			foreach (string service in responseJson.services) {
+				Debug.Log("Service from Response Json: " + service);
+			}
+
+			// responseMessage.text = responseText;
 		}
 	}
 
@@ -40,16 +51,11 @@ public class Search : MonoBehaviour {
 	}
 
 	private void Start() {
+		StartCoroutine(FetchServiceKeywords()); // Run in background async.
 		List<TMP_Dropdown.OptionData> searchOptionData = GetSearchKeywords();
 		TMP_Dropdown searchDropdownComp = searchDropdown.GetComponent<TMP_Dropdown>();
 		searchDropdownComp.options.Clear();
 		searchDropdownComp.options.AddRange(searchOptionData);
 		searchDropdownComp.value = -1;
-		
-		searchButton.GetComponent<Button>().onClick.AddListener(FetchDataFromWhiskeyCMS);
-	}
-
-	private void FetchDataFromWhiskeyCMS() {
-		StartCoroutine(FetchServiceKeywords()); // Run in background async.
 	}
 }

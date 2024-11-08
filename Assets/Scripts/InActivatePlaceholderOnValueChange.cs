@@ -27,6 +27,9 @@ public class InActivatePlaceholderOnValueChange : MonoBehaviour, IPointerClickHa
 	public void OnPointerClick(PointerEventData eventData) {
 		PointerEventData pseudoPointer = new PointerEventData(EventSystem.current);
 		ExecuteEvents.Execute(dropdownField.gameObject, pseudoPointer, ExecuteEvents.pointerClickHandler);
+	}
+
+	public void AfterFetchJsonResource() {
 		dropdownField.onValueChanged.AddListener(OnDropdownValueChanged);
 	}
 
@@ -47,7 +50,7 @@ public class InActivatePlaceholderOnValueChange : MonoBehaviour, IPointerClickHa
 		placeholderField.gameObject.SetActive(false);
 		placeholderField.interactable = false;
 		dropdownField.options.RemoveAt(0);
-		dropdownField.onValueChanged.RemoveListener(InActivateSearchPlaceholder);
+		dropdownField.onValueChanged.RemoveListener(OnDropdownValueChanged);
 		dropdownField.value = (valueSelected - 1);
 	}
 }

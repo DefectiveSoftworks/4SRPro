@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.UI;
@@ -16,10 +15,6 @@ public class Search : MonoBehaviour {
 	
 	private const string ServicesEndpoint = "http://whiskeybox.local/services";
 
-	private readonly List<string> _searchKeywords = new() {
-		"---------------------------------------",
-	};
-
 	[SerializeField]
 	private Button searchButton;
 
@@ -27,9 +22,9 @@ public class Search : MonoBehaviour {
 	private TMP_Dropdown searchDropdown;
 
 	[SerializeField]
-	private TMP_Text responseMessage;
+	private TMP_InputField searchPlaceholder;
 
-	private IEnumerator FetchServiceKeywords(Action callback) {
+	private IEnumerator FetchServiceKeywords(Action<List<string>> callback) {
 		UnityWebRequest http = UnityWebRequest.Get(ServicesEndpoint);
 		yield return http.SendWebRequest();
 
@@ -39,17 +34,20 @@ public class Search : MonoBehaviour {
 			string responseText = http.downloadHandler.text;
 			Debug.Log("WhiskeyCMS Service has responded successfully with: " + responseText);
 			Foo responseJson = JsonUtility.FromJson<Foo>(responseText);
-			_searchKeywords.AddRange(responseJson.services);
-			callback?.Invoke();
+			List<string> searchKeywords = responseJson.services.ToList();
+			searchKeywords.Insert(0, "---------------------------------------");
+			callback?.Invoke(searchKeywords);
 		}
 	}
 
-	private void PopulateSearchKeywords() {
-		List<TMP_Dropdown.OptionData> searchOptionData = _searchKeywords.Select(searchKeyword => new TMP_Dropdown.OptionData(searchKeyword)).ToList();
+	private void PopulateSearchKeywords(List<string> searchKeywords) {
+		List<TMP_Dropdown.OptionData> searchOptionData = 
+			searchKeywords.Select(searchKeyword => new TMP_Dropdown.OptionData(searchKeyword)).ToList();
 		TMP_Dropdown searchDropdownComp = searchDropdown.GetComponent<TMP_Dropdown>();
 		searchDropdownComp.options.Clear();
 		searchDropdownComp.options.AddRange(searchOptionData);
 		searchDropdownComp.value = -1;
+		searchPlaceholder.GetComponent<InActivatePlaceholderOnValueChange>().AfterFetchJsonResource();
 	}
 
 	private void Start() {

@@ -1,22 +1,16 @@
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Networking;
 using UnityEngine.UI;
 
 public class Search : MonoBehaviour {
+	private const string ServicesEndpoint = "http://whiskeybox.local/foo";
+
 	private readonly string[] _searchKeywords = {
 		"---------------------------------------",
-		"Roofing",
-		"Soffit/Fascia",
-		"Gutters",
-		"Siding",
-		"Drywall",
-		"Painting",
-		"Flooring",
-		"Demolition",
-		"Local Moving",
-		"Pressure Washing",
 	};
 
 	[SerializeField]
@@ -25,11 +19,28 @@ public class Search : MonoBehaviour {
 	[SerializeField]
 	private TMP_Dropdown searchDropdown;
 
+	[SerializeField]
+	private TMP_Text _responseMessage;
+
+	private IEnumerator FetchServiceKeywords() {
+		UnityWebRequest http = UnityWebRequest.Get(ServicesEndpoint);
+		yield return http.SendWebRequest();
+
+		if (http.result != UnityWebRequest.Result.Success) {
+			Debug.LogError(http.error);
+		} else {
+			string responseText = http.downloadHandler.text;
+			Debug.Log("WhiskeyCMS Service has responded successfully with: " + responseText);
+			_responseMessage.text = responseText;
+		}
+	}
+
 	private List<TMP_Dropdown.OptionData> GetSearchKeywords() {
 		return _searchKeywords.Select(searchKeyword => new TMP_Dropdown.OptionData(searchKeyword)).ToList();
 	}
 
 	private void Start() {
+		StartCoroutine(FetchServiceKeywords()); // Run in background async.
 		List<TMP_Dropdown.OptionData> searchOptionData = GetSearchKeywords();
 		TMP_Dropdown searchDropdownComp = searchDropdown.GetComponent<TMP_Dropdown>();
 		searchDropdownComp.options.Clear();

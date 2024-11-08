@@ -20,7 +20,7 @@ public class Search : MonoBehaviour {
 	private TMP_Dropdown searchDropdown;
 
 	[SerializeField]
-	private TMP_Text _responseMessage;
+	private TMP_Text responseMessage;
 
 	private IEnumerator FetchServiceKeywords() {
 		UnityWebRequest http = UnityWebRequest.Get(ServicesEndpoint);
@@ -31,7 +31,7 @@ public class Search : MonoBehaviour {
 		} else {
 			string responseText = http.downloadHandler.text;
 			Debug.Log("WhiskeyCMS Service has responded successfully with: " + responseText);
-			_responseMessage.text = responseText;
+			responseMessage.text = responseText;
 		}
 	}
 
@@ -40,11 +40,16 @@ public class Search : MonoBehaviour {
 	}
 
 	private void Start() {
-		StartCoroutine(FetchServiceKeywords()); // Run in background async.
 		List<TMP_Dropdown.OptionData> searchOptionData = GetSearchKeywords();
 		TMP_Dropdown searchDropdownComp = searchDropdown.GetComponent<TMP_Dropdown>();
 		searchDropdownComp.options.Clear();
 		searchDropdownComp.options.AddRange(searchOptionData);
 		searchDropdownComp.value = -1;
+		
+		searchButton.GetComponent<Button>().onClick.AddListener(FetchDataFromWhiskeyCMS);
+	}
+
+	private void FetchDataFromWhiskeyCMS() {
+		StartCoroutine(FetchServiceKeywords()); // Run in background async.
 	}
 }

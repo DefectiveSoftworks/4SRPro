@@ -332,7 +332,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   searchButton: {fileID: 545778309}
   searchDropdown: {fileID: 1053750024}
-  _responseMessage: {fileID: 1444963991}
+  responseMessage: {fileID: 1444963991}
 --- !u!224 &1053750023 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 3299135925747317087, guid: a8fd4ac3c1f1d5f4dbac922cd8181ae5, type: 3}

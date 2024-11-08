@@ -51,6 +51,26 @@ public class Search : MonoBehaviour {
 	}
 
 	private void Start() {
+		PerformAsyncOperations();
+		RegisterEvents();
+	}
+
+	private void PerformAsyncOperations() {
 		StartCoroutine(FetchServiceKeywords(PopulateSearchKeywords)); // Run in background async.
+	}
+
+	private void PerformSearch() {
+		if (searchPlaceholder.IsActive()) {
+			Debug.LogError("You have not selected any value!");
+			return;
+		}
+
+		int searchForKeyword = searchDropdown.value;
+		string searchForKeywordLabel = searchDropdown.options[searchForKeyword]?.text;
+		Debug.Log("You have selected: ['label' => " + searchForKeywordLabel + ", 'value' => " + searchForKeyword + "]");
+	}
+
+	private void RegisterEvents() {
+		searchButton.onClick.AddListener(PerformSearch);
 	}
 }

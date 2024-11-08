@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.UI;
@@ -15,7 +16,7 @@ public class Search : MonoBehaviour {
 	
 	private const string ServicesEndpoint = "http://whiskeybox.local/services";
 
-	private readonly string[] _searchKeywords = {
+	private readonly List<string> _searchKeywords = new() {
 		"---------------------------------------",
 	};
 
@@ -28,7 +29,7 @@ public class Search : MonoBehaviour {
 	[SerializeField]
 	private TMP_Text responseMessage;
 
-	private IEnumerator FetchServiceKeywords() {
+	private IEnumerator FetchServiceKeywords(Action callback) {
 		UnityWebRequest http = UnityWebRequest.Get(ServicesEndpoint);
 		yield return http.SendWebRequest();
 
@@ -38,24 +39,20 @@ public class Search : MonoBehaviour {
 			string responseText = http.downloadHandler.text;
 			Debug.Log("WhiskeyCMS Service has responded successfully with: " + responseText);
 			Foo responseJson = JsonUtility.FromJson<Foo>(responseText);
-			foreach (string service in responseJson.services) {
-				Debug.Log("Service from Response Json: " + service);
-			}
-
-			// responseMessage.text = responseText;
+			_searchKeywords.AddRange(responseJson.services);
+			callback?.Invoke();
 		}
 	}
 
-	private List<TMP_Dropdown.OptionData> GetSearchKeywords() {
-		return _searchKeywords.Select(searchKeyword => new TMP_Dropdown.OptionData(searchKeyword)).ToList();
-	}
-
-	private void Start() {
-		StartCoroutine(FetchServiceKeywords()); // Run in background async.
-		List<TMP_Dropdown.OptionData> searchOptionData = GetSearchKeywords();
+	private void PopulateSearchKeywords() {
+		List<TMP_Dropdown.OptionData> searchOptionData = _searchKeywords.Select(searchKeyword => new TMP_Dropdown.OptionData(searchKeyword)).ToList();
 		TMP_Dropdown searchDropdownComp = searchDropdown.GetComponent<TMP_Dropdown>();
 		searchDropdownComp.options.Clear();
 		searchDropdownComp.options.AddRange(searchOptionData);
 		searchDropdownComp.value = -1;
+	}
+
+	private void Start() {
+		StartCoroutine(FetchServiceKeywords(PopulateSearchKeywords)); // Run in background async.
 	}
 }
